@@ -1,0 +1,147 @@
+
+.container { 
+    position: absolute;
+    background-color: #FFF;
+    width: 568px;
+    height: 320px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    padding: 80px;
+    align-items: center;
+    align-content: space-around;
+}
+
+@media (max-width: 560px){
+    .container {
+        height: 568px;
+        width: 320px;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+    
+
+
+
+.square {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    transform: rotate(45deg);
+    border: 15px solid #cde6ff;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.square::before {
+    content: "";
+    position: absolute;
+    box-sizing: border-box;
+    inset:-15px;
+    border-radius: 50%;
+    border: 15px solid #005CFF;
+    clip-path: var(--clip-path, polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0));
+}
+
+.rotate {
+    animation: rotate 3s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(45deg); }
+    to { transform: rotate(405deg); }
+}
+
+
+
+
+
+.states {
+    row-gap: 10px;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.lines {
+    column-gap: 20px;
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.value {
+    text-align: center;
+    width: 40px;
+    height: 25px;
+    border:  1px solid #000;
+    border-radius: 25px;
+}
+
+.value::-webkit-outer-spin-button,
+.value::-webkit-inner-spin-button {
+    -webkit-appearance: none; 
+}
+
+.value,
+.value:hover,
+.value:focus {
+    appearance: none;
+    -moz-appearance: textfield;
+}
+
+
+.toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* height: 40px; */
+}
+
+.input-toggle {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+}
+  
+.label-toggle {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 40px;
+    height: 25px;
+    background: #cde6ff;
+    display: block;
+    border-radius: 25px;
+    position: relative;
+}
+  
+.label-toggle:after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 21px;
+    height: 21px;
+    background: #fff;
+    border-radius: 21px;
+    transition: 0.3s;
+}
+  
+.input-toggle:checked + .label-toggle {
+    background: #005CFF;
+}
+  
+.input-toggle:checked + .label-toggle:after {
+    left: calc(100% - 2px);
+    transform: translateX(-100%);
+}
+  
+.label-toggle:active:after {
+    width: 30px;
+}
+  
