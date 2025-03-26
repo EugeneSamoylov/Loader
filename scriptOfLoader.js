@@ -11,7 +11,7 @@ export function addLoader(elemToAddLoader, where){
     const uniqueId = Math.random().toString(36);
 
     let loaderHTML = `
-    <article class="container" aria-label="Loader">
+    <article class="container" aria-label="Loader" id="container-${uniqueId}">
         <section class="loader" aria-label="Loader circle">
             <div class="square" id="loader-${uniqueId}"></div>
         </section>
@@ -89,7 +89,7 @@ export function addLoader(elemToAddLoader, where){
         //     input.value = input.value.slice(0, 1);
         //     loader.style.setProperty('--clip-path', '');
         //     return;
-        // } else 
+        // }
 
         if(input.value === ''){
             loader.style.setProperty('--clip-path', '');
@@ -100,26 +100,66 @@ export function addLoader(elemToAddLoader, where){
             return;
         } 
 
-        let clipPath;
-        if (value <= 25) {
-            const progress = value / 25;
-            clipPath = `polygon(50% 50%, 0 0, ${progress * 100}% 0, ${progress * 100}% 0, ${progress * 100}% 0, ${progress * 100}% 0)`;
-        } 
-        else if (value <= 50) {
-            const progress = (value - 25) / 25;
-            clipPath = `polygon(50% 50%, 0 0, 100% 0, 100% ${progress * 100}%, 100% ${progress * 100}%, 100% ${progress * 100}%)`;
-        } 
-        else if (value <= 75) {
-            const progress = (value - 50) / 25;
-            clipPath = `polygon(50% 50%, 0 0, 100% 0, 100% 100%, ${100 - progress * 100}% 100%, ${100 - progress * 100}% 100%)`;
-        } 
-        else {
-            const progress = (value - 75) / 25;
-            clipPath = `polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 ${100 - progress * 100}%)`;
-        }
+        const clipPath = clipPathGenerate(value);
 
         loader.style.setProperty('--clip-path', clipPath);
     }
 
     return uniqueId;
+}
+
+export function setProgress(uniqueId, value = 0){
+    if(value < 0 || value > 100 || Number.isNaN(value)){
+        throw new Error(`Value is not valid: ${value}`);
+    } 
+    const input = document.getElementById(`value-${uniqueId}`);
+    const loader = document.getElementById(`loader-${uniqueId}`);
+
+    input.value = value;
+
+    const clipPath = clipPathGenerate(value);
+
+    loader.style.setProperty('--clip-path', clipPath);
+}
+
+
+export function removeLoader(uniqueId){
+    document.getElementById(`container-${uniqueId}`).remove();
+}
+
+export function animateLoader(uniqueId){
+    const animate = document.getElementById(`animate-${uniqueId}`);
+    if(animate.checked) return;
+    const eventClickOnAnimate = new Event('click');
+    animate.dispatchEvent(eventClickOnAnimate);
+    animate.checked = true;
+}
+
+export function stopAnimateLoader(uniqueId){
+    const animate = document.getElementById(`animate-${uniqueId}`);
+    if(!animate.checked) return;
+    const eventClickOnAnimate = new Event('click');
+    animate.dispatchEvent(eventClickOnAnimate);
+    animate.checked = false;
+}
+
+function clipPathGenerate(value){
+    let clipPath;
+    if (value <= 25) {
+        const progress = value / 25;
+        clipPath = `polygon(50% 50%, 0 0, ${progress * 100}% 0, ${progress * 100}% 0, ${progress * 100}% 0, ${progress * 100}% 0)`;
+    } 
+    else if (value <= 50) {
+        const progress = (value - 25) / 25;
+        clipPath = `polygon(50% 50%, 0 0, 100% 0, 100% ${progress * 100}%, 100% ${progress * 100}%, 100% ${progress * 100}%)`;
+    } 
+    else if (value <= 75) {
+        const progress = (value - 50) / 25;
+        clipPath = `polygon(50% 50%, 0 0, 100% 0, 100% 100%, ${100 - progress * 100}% 100%, ${100 - progress * 100}% 100%)`;
+    } 
+    else {
+        const progress = (value - 75) / 25;
+        clipPath = `polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 ${100 - progress * 100}%)`;
+    }
+    return clipPath;
 }
