@@ -76,29 +76,26 @@ export function addLoader(elemToAddLoader, where){
     }
 
     function load(){
-        let value = +input.value;
+        const string = input.value;
+        const clearStr = string.split('').filter(char => !isNaN(char) && char !== ' ').join('');
+        input.value = clearStr;
 
-        //частичное ограничение ввода невалидных значений 
-        // const length = input.value.length;
-            // console.log(value);
-            // console.log(input.value);
-            // console.log(value !== 10);
-        // if(value > 1 && length > 2 && value !== 100 && value != 1000){
-        //     input.value = input.value.slice(0, 2);
-        // } else if(value === 0){
-        //     input.value = input.value.slice(0, 1);
-        //     loader.style.setProperty('--clip-path', '');
-        //     return;
-        // }
+        let value = +input.value;
+        const length = input.value.length;
+
+        if(value > 1 && length > 2 && value !== 100 && input.value.slice(0, 1) !== '0'){
+            input.value = input.value.slice(0, 2);
+            value = +input.value;
+        } else if(input.value.slice(0, 1) === '0'){
+            input.value = input.value.slice(0, 1);
+            loader.style.setProperty('--clip-path', '');
+            return;
+        }
 
         if(input.value === ''){
             loader.style.setProperty('--clip-path', '');
             return;
-        } 
-
-        if(value <= 0 || value > 100 || Number.isNaN(value)){
-            return;
-        } 
+        }
 
         const clipPath = clipPathGenerate(value);
 
@@ -109,7 +106,7 @@ export function addLoader(elemToAddLoader, where){
 }
 
 export function setProgress(uniqueId, value = 0){
-    if(value < 0 || value > 100 || Number.isNaN(value)){
+    if(value < 0 || value > 100 || isNaN(value)){
         throw new Error(`Value is not valid: ${value}`);
     } 
     const input = document.getElementById(`value-${uniqueId}`);
@@ -117,7 +114,7 @@ export function setProgress(uniqueId, value = 0){
 
     input.value = value;
 
-    const clipPath = clipPathGenerate(value);
+    const clipPath = clipPathGenerate(+value);
 
     loader.style.setProperty('--clip-path', clipPath);
 }
@@ -144,21 +141,21 @@ export function stopAnimateLoader(uniqueId){
 }
 
 function clipPathGenerate(value){
-    let clipPath;
+    let clipPath, progress;
     if (value <= 25) {
-        const progress = value / 25;
+        progress = value / 25;
         clipPath = `polygon(50% 50%, 0 0, ${progress * 100}% 0, ${progress * 100}% 0, ${progress * 100}% 0, ${progress * 100}% 0)`;
     } 
     else if (value <= 50) {
-        const progress = (value - 25) / 25;
+        progress = (value - 25) / 25;
         clipPath = `polygon(50% 50%, 0 0, 100% 0, 100% ${progress * 100}%, 100% ${progress * 100}%, 100% ${progress * 100}%)`;
     } 
     else if (value <= 75) {
-        const progress = (value - 50) / 25;
+        progress = (value - 50) / 25;
         clipPath = `polygon(50% 50%, 0 0, 100% 0, 100% 100%, ${100 - progress * 100}% 100%, ${100 - progress * 100}% 100%)`;
     } 
     else {
-        const progress = (value - 75) / 25;
+        progress = (value - 75) / 25;
         clipPath = `polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 ${100 - progress * 100}%)`;
     }
     return clipPath;

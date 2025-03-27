@@ -5,7 +5,7 @@ const loaderId = addLoader(document.body, 'afterbegin');
 
 // тесты методов
 
-// setProgress(loaderId, 12);
+// setProgress(loaderId, "21");
 
 // setTimeout(() => animateLoader(loaderId), 3000);
 // setTimeout(() => stopAnimateLoader(loaderId), 6000);
